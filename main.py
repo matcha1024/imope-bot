@@ -1,6 +1,8 @@
 import discord, time
 
-TOKEN = "OTE2MjcwODAwNDU2MjY1NzM4.Yantrg._kHSAiBYyp03eZ7Aagm-iVqEgkw"
+TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
+TOKEN = TOKEN_file.read()
+TOKEN_file.close()
 client = discord.Client()
 
 @client.event
