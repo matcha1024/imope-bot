@@ -1,10 +1,16 @@
 import discord, time, json, datetime, random, asyncio
 import discord_commands
+from discord.ext import commands
 import nest_asyncio
 nest_asyncio.apply()
 
 points_path = "./date/points.json"
 login_path = "./date/login.json"
+intents = discord.Intents.default()
+intents.members = True
+
+client = discord.Client(intents=intents)
+client = commands.Bot(command_prefix='--')
 
 def load_json(path):
 	file = open(path)
@@ -18,13 +24,20 @@ def write_json(write, path):
 	file_write.close()
 	return
 
+def notice_point(point,member,type):
+	embed = discord.Embed(
+		title = f"ポイント獲得:{type}",
+		description = f"{member}さんが{point}ポイント獲得しました。"
+	)
+	return embed
+
 loop = asyncio.get_event_loop()
+notice_channel = 917413934162649088
 
 def main():
 	TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
 	TOKEN = TOKEN_file.read()
 	TOKEN_file.close()
-	client = discord.Client()
 
 	points = load_json(points_path)
 
@@ -64,6 +77,8 @@ def main():
 				except:
 					points[member] = logbo
 				write_json(points, points_path)
+				loop.run_until_complete(notice_point(logbo,member,"ログボ",client.get_channel(notice_channel)))
+				await client.get_channel(notice_channel).send(embed = notice_point(logbo,member,"ログボ"))
 
 			print(f"{member}さんが接続しました")
 		else:
@@ -77,6 +92,8 @@ def main():
 			write_json(points, points_path)
 
 			print(f"{member}さんが切断しました ({connected_time}秒)")
+			if 	60 <= connected_time:
+				await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member,"通話"))
 
 	@client.event
 	async def on_message(message):
