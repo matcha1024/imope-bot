@@ -1,4 +1,7 @@
-import discord, time, json, datetime, random
+import discord, time, json, datetime, random, asyncio
+import discord_commands
+import nest_asyncio
+nest_asyncio.apply()
 
 points_path = "./date/points.json"
 login_path = "./date/login.json"
@@ -14,6 +17,8 @@ def write_json(write, path):
 	json.dump(write, file_write)
 	file_write.close()
 	return
+
+loop = asyncio.get_event_loop()
 
 def main():
 	TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
@@ -81,33 +86,12 @@ def main():
 			name = message.author.nick
 		if(message.author.bot):
 			return
-		if(message.content == '!point'):
-			try:
-				embed = discord.Embed(
-					title = f"{name}さんの現在のポイント",
-					description = f"{points[message.author.name]}"
-				)
 
-				await message.channel.send(embed = embed)
-			except:
-				embed = discord.Embed(
-					title = f"Error.",
-					description = f"{name}さんはポイントを持っていません。"
-				)
-
-				await message.channel.send(embed = embed)
-
-
-		elif(message.content == '!points'):
-			out = ""
-			for v in points:
-				out += f"{v}さん: {points[v]}\n"
-
-			embed = discord.Embed(
-				title = "ポイント一覧表",
-				description = out
-			)
-
-			await message.channel.send(embed = embed)
+		if(message.content == '--point'):
+			loop.run_until_complete(discord_commands.point(message, name, points))
+		elif(message.content == '--points'):
+			loop.run_until_complete(discord_commands.points(message, points))
+		elif(message.content == '--help'):
+			loop.run_until_complete(discord_commands.help(message))
 
 	client.run(TOKEN)
