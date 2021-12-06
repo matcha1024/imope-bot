@@ -54,6 +54,7 @@ def main():
 					login[member]["logbo"] = 1
 				login[member]["last"] = today
 
+				lowest = login[member]["logbo"]
 				logbo = random.choice(range(lowest, lowest + 10))
 
 				write_json(login, login_path)
