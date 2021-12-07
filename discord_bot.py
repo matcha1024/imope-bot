@@ -1,8 +1,6 @@
 import discord, time, json, datetime, random, asyncio
 import discord_commands
 from discord.ext import commands
-import nest_asyncio
-nest_asyncio.apply()
 
 points_path = "./date/points.json"
 login_path = "./date/login.json"
@@ -106,10 +104,10 @@ def main():
 			return
 
 		if(message.content == '--point'):
-			loop.run_until_complete(discord_commands.point(message, name, points))
+			await message.channel.send(embed = discord_commands.point(message, name, points))
 		elif(message.content == '--points'):
-			loop.run_until_complete(discord_commands.points(message, points))
+			await message.channel.send(embed = discord_commands.points(points))
 		elif(message.content == '--help'):
-			loop.run_until_complete(discord_commands.help(message))
+			await message.channel.send(embed = discord_commands.help())
 
 	client.run(TOKEN)
