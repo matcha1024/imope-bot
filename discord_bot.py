@@ -28,7 +28,7 @@ def notice_point(point,member,type, t_year, t_month, t_day, t_hour, t_minute, t_
 	)
 	return embed
 
-def get_top3():
+def get_ranking():
 	json = load_json()
 	ranking = []
 
@@ -36,7 +36,7 @@ def get_top3():
 		ranking.append([json[v]["point"], v])
 	ranking.sort()
 	ranking.reverse()
-	return ranking[:3]
+	return ranking
 
 notice_channel = 917413934162649088
 member_connected_time = {}
@@ -78,7 +78,8 @@ async def on_voice_state_update(member, before, after):
 			except:
 				json[member_id]["point"] = logbo
 			write_json(json)
-			await client.get_channel(notice_channel).send(embed = notice_point(logbo,member.name,"ログボ"))
+			t = datetime.datetime.now()
+			await client.get_channel(notice_channel).send(embed = notice_point(logbo,member.name,"ログボ", t.year, t.month, t.day, t.hour, t.minute, t.second))
 
 		print(f"{member.name}さんが接続しました")
 	else:
@@ -96,15 +97,16 @@ async def on_voice_state_update(member, before, after):
 			t = datetime.datetime.now()
 			await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", t.year, t.month, t.day, t.hour, t.minute, t.second))
 
-	top3 = get_top3()
+	ranking = get_ranking()
 	medals = ["🥇", "🥈", "🥉"]
 	i = 0
-	for v in top3:
+	for v in ranking:
 		member = await client.guilds[0].fetch_member(int(v[1]))
 		nick = member.display_name
 		if(nick[0] == medals[0] or nick[0] == medals[1] or nick[0] == medals[2]):
 			nick = nick[1:]
-		nick = medals[i] + nick
+		if(i < 3):
+			nick = medals[i] + nick
 		try:
 			await member.edit(nick=nick)
 		except:
@@ -158,7 +160,7 @@ async def on_message(message):
 async def on_member_update(before, after):
 	if(not before.nick == after.nick):
 		ranking = 0
-		top3 = get_top3()
+		top3 = get_ranking()[:3]
 		for v in top3:
 			if(int(v[1]) == after.id):
 				break
