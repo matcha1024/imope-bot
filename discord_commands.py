@@ -2,10 +2,11 @@ import discord
 
 def point(message, name, points):
 	embed = discord.Embed()
+	print(points[f"{message.author.id}"])
 	try:
 		embed = discord.Embed(
 			title = f"{name}さんの現在のポイント",
-			description = f"{points[message.author.name]}"
+			description = f"{points[f'{message.author.id}']}"
 		)
 	except:
 		embed = discord.Embed(
