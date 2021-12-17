@@ -21,10 +21,10 @@ def write_json(write):
 	file_write.close()
 	return
 
-def notice_point(point,member,type, t_year, t_month, t_day, t_hour, t_minute, t_second):
+def notice_point(point,member,type, t):
 	embed = discord.Embed(
 		title = f"ポイント獲得:{type}",
-		description = f"{member}さんが{point}ポイント獲得しました。 ({t_year}/{t_month}/{t_day}/{t_hour}:{t_minute}:{t_second})"
+		description = f"{member}さんが{point}ポイント獲得しました。 ({t.year}/{t.month}/{t.day}/{t.hour}:{t.minute}:{t.second})"
 	)
 	return embed
 
@@ -78,8 +78,7 @@ async def on_voice_state_update(member, before, after):
 			except:
 				json[member_id]["point"] = logbo
 			write_json(json)
-			t = datetime.datetime.now()
-			await client.get_channel(notice_channel).send(embed = notice_point(logbo,member.name,"ログボ", t.year, t.month, t.day, t.hour, t.minute, t.second))
+			await client.get_channel(notice_channel).send(embed = notice_point(logbo,member.name,"ログボ", datetime.datetime.now()))
 
 		print(f"{member.name}さんが接続しました")
 	else:
@@ -94,8 +93,7 @@ async def on_voice_state_update(member, before, after):
 
 		print(f"{member_id}さんが切断しました ({connected_time}秒)")
 		if 	60 <= connected_time:
-			t = datetime.datetime.now()
-			await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", t.year, t.month, t.day, t.hour, t.minute, t.second))
+			await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", datetime.datetime.now()))
 
 	ranking = get_ranking()
 	medals = ["🥇", "🥈", "🥉"]
