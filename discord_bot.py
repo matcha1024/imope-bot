@@ -1,6 +1,7 @@
-import discord, time, json, datetime, random, asyncio
+import discord, time, json, datetime, random, asyncio,demoji
 from discord.ext import commands ,tasks
 import nest_asyncio
+from tweet import doTweet
 nest_asyncio.apply()
 
 intents = discord.Intents.default()
@@ -8,6 +9,9 @@ intents.members = True
 
 # client = discord.Client(intents=intents)
 client = commands.Bot(command_prefix='--', intents=intents)
+voice_channel_member = [[],[],[],[]]
+before_tweet_date = datetime.datetime(2018,1,1)
+voice_channel_index = {917348889714130958:0,921585246087036978:1,921585330476417055:2,921585395710451782:3}
 
 def load_json():
 	file = open('./userinfo.json')
@@ -45,8 +49,45 @@ member_connected_time = {}
 async def on_ready():
 	print("Logged in.")
 
+@tasks.loop(minutes=30)
+async def voice_member_tweet():
+	global before_tweet_date
+	tweet_time = datetime.datetime.now() - before_tweet_date
+	if tweet_time.seconds < 60*5:
+		return
+	before_tweet_date = datetime.datetime.now()
+
+	voice_name = ["おえかきボイチャ:","ボイスチャンネル1:","ボイスチャンネル2:","ボイスチャンネル3:"]
+	message = "ボイスチャンネル接続状況\n\n"
+	for i in range(4):
+		message += voice_name[i]
+		if len(voice_channel_member[i]) == 0:
+			message += "なし\n"
+		else:
+			message += "\n"
+			for id in voice_channel_member[i]:
+				name = await client.guilds[0].fetch_member(int(id))
+				message += f"{' '*6}・{name.display_name}\n"
+	message += f"\n{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')} 現在"
+	doTweet(message)
+
 @client.event
 async def on_voice_state_update(member, before, after):
+	if not before.channel:
+		voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
+	else:
+		voice_channel_member[voice_channel_index[before.channel.id]].remove(member.id)
+		if after.channel:
+			voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
+	allsum = sum(len(v) for v in voice_channel_member)
+
+	if 0 < allsum and not voice_member_tweet.is_running():
+		print("起動")
+		voice_member_tweet.start()
+	elif 0 == allsum and voice_member_tweet.is_running():
+		print("停止")
+		voice_member_tweet.cancel()
+
 	member_id = str(member.id)
 	json = load_json()
 	if(before.channel == None):
@@ -95,22 +136,22 @@ async def on_voice_state_update(member, before, after):
 		if 	60 <= connected_time:
 			await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", datetime.datetime.now()))
 
-	ranking = get_ranking()
-	medals = ["🥇", "🥈", "🥉"]
-	i = 0
-	for v in ranking:
-		member = await client.guilds[0].fetch_member(int(v[1]))
-		nick = member.display_name
-		if(nick[0] == medals[0] or nick[0] == medals[1] or nick[0] == medals[2]):
-			nick = nick[1:]
-		if(i < 3):
-			nick = medals[i] + nick
-		try:
-			await member.edit(nick=nick)
-		except:
-			print("Administrator.")
+	# ranking = get_ranking()
+	# medals = ["🥇", "🥈", "🥉"]
+	# i = 0
+	# for v in ranking:
+	# 	member = await client.guilds[0].fetch_member(int(v[1]))
+	# 	nick = member.display_name
+	# 	if(nick[0] == medals[0] or nick[0] == medals[1] or nick[0] == medals[2]):
+	# 		nick = nick[1:]
+	# 	if(i < 3):
+	# 		nick = medals[i] + nick
+	# 	try:
+	# 		await member.edit(nick=nick)
+	# 	except:
+	# 		print("Administrator.")
 
-		i += 1
+	# 	i += 1
 
 
 
@@ -167,8 +208,7 @@ async def on_member_update(before, after):
 		medals = ["🥇", "🥈", "🥉"]
 		nick = after.display_name
 
-		if(nick[0] == medals[0] or nick[0] == medals[1] or nick[0] == medals[2]):
-			nick = nick[1:]
+		nick = demoji.replace(string=nick, repl="")
 		if(ranking < 3):
 			nick = medals[ranking] + nick
 
