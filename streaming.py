@@ -33,5 +33,8 @@ class MyStreamer(TwythonStreamer):
         doCommand(command,replied_id,data)
     def on_error(self, status_code, data):
         print(status_code)
+
+
+# print("streaming test")
 stream = MyStreamer(consumer_key,consumer_secret,access_token,access_token_secret)
 stream.statuses.filter(track='@imope_bot')

@@ -78,9 +78,9 @@ if not int(dt.day) in [1,int(get_end_month(dt)[1]/2)+1]:
     exit()
 date_first,date_end = get_aggregation_period(dt)
 print(date_first,date_end)
+def main():
+    TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
+    TOKEN = TOKEN_file.read()
+    TOKEN_file.close()
 
-TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
-TOKEN = TOKEN_file.read()
-TOKEN_file.close()
-
-client.run(TOKEN)
+    client.run(TOKEN)

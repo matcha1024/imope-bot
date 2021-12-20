@@ -1,0 +1,139 @@
+Logged in.
+Unhandled exception in internal background task 'voice_member_tweet'.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/discord/ext/tasks/__init__.py", line 101, in _loop
+    await self.coro(*args, **kwargs)
+  File "/home/ubuntu/imope-bot/discord_bot.py", line 72, in voice_member_tweet
+    doTweet(message)
+  File "/home/ubuntu/imope-bot/tweet.py", line 6, in doTweet
+    twitter.update_status(status=text)
+  File "/usr/local/lib/python3.8/dist-packages/twython/endpoints.py", line 123, in update_status
+    return self.post('statuses/update', params=params)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 283, in post
+    return self.request(endpoint, 'POST', params=params, version=version, json_encoded=json_encoded)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 272, in request
+    content = self._request(url, method=method, params=params,
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 202, in _request
+    raise ExceptionType(
+twython.exceptions.TwythonError: Twitter API returned a 403 (Forbidden), Status is a duplicate.
+Task exception was never retrieved
+future: <Task finished name='Task-19' coro=<Loop._loop() done, defined at /usr/local/lib/python3.8/dist-packages/discord/ext/tasks/__init__.py:88> exception=TwythonError('Twitter API returned a 403 (Forbidden), Status is a duplicate.')>
+Traceback (most recent call last):
+  File "/usr/lib/python3.8/asyncio/tasks.py", line 280, in __step
+    result = coro.send(None)
+  File "/usr/local/lib/python3.8/dist-packages/discord/ext/tasks/__init__.py", line 125, in _loop
+    raise exc
+  File "/usr/local/lib/python3.8/dist-packages/discord/ext/tasks/__init__.py", line 101, in _loop
+    await self.coro(*args, **kwargs)
+  File "/home/ubuntu/imope-bot/discord_bot.py", line 72, in voice_member_tweet
+    doTweet(message)
+  File "/home/ubuntu/imope-bot/tweet.py", line 6, in doTweet
+    twitter.update_status(status=text)
+  File "/usr/local/lib/python3.8/dist-packages/twython/endpoints.py", line 123, in update_status
+    return self.post('statuses/update', params=params)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 283, in post
+    return self.request(endpoint, 'POST', params=params, version=version, json_encoded=json_encoded)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 272, in request
+    content = self._request(url, method=method, params=params,
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 202, in _request
+    raise ExceptionType(
+twython.exceptions.TwythonError: Twitter API returned a 403 (Forbidden), Status is a duplicate.
+[{'name': 'いもぺ', 'screen_name': 'tenseimon', 'id': 1385960031745499137, 'id_str': '1385960031745499137', 'connections': ['followed_by']}]
+['followed_by']
+1
+Traceback (most recent call last):
+  File "streaming.py", line 40, in <module>
+    stream.statuses.filter(track='@imope_bot')
+  File "/usr/local/lib/python3.8/dist-packages/twython/streaming/types.py", line 47, in filter
+    self.streamer._request(url, 'POST', params=params)
+  File "/usr/local/lib/python3.8/dist-packages/twython/streaming/api.py", line 152, in _request
+    if self.on_success(data):  # pragma: no cover
+  File "streaming.py", line 29, in on_success
+    doReply(message,replied_id)
+  File "/home/ubuntu/imope-bot/tweet.py", line 14, in doReply
+    twitter.update_status(status=text, in_reply_to_status_id=id, auto_populate_reply_metadata=True)
+  File "/usr/local/lib/python3.8/dist-packages/twython/endpoints.py", line 123, in update_status
+    return self.post('statuses/update', params=params)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 283, in post
+    return self.request(endpoint, 'POST', params=params, version=version, json_encoded=json_encoded)
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 272, in request
+    content = self._request(url, method=method, params=params,
+  File "/usr/local/lib/python3.8/dist-packages/twython/api.py", line 202, in _request
+    raise ExceptionType(
+twython.exceptions.TwythonError: Twitter API returned a 403 (Forbidden), Status is a duplicate.
+Logged in.
+[{'name': 'いもぺ', 'screen_name': 'tenseimon', 'id': 1385960031745499137, 'id_str': '1385960031745499137', 'connections': ['followed_by']}]
+['followed_by']
+1
+[{'name': 'いもぺ', 'screen_name': 'tenseimon', 'id': 1385960031745499137, 'id_str': '1385960031745499137', 'connections': ['following', 'followed_by']}]
+['following', 'followed_by']
+2
+おう
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 313, in recv_into
+    return self.connection.recv_into(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/OpenSSL/SSL.py", line 1822, in recv_into
+    self._raise_ssl_error(self._ssl, result)
+  File "/usr/lib/python3/dist-packages/OpenSSL/SSL.py", line 1622, in _raise_ssl_error
+    raise WantReadError()
+OpenSSL.SSL.WantReadError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 313, in recv_into
+    return self.connection.recv_into(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/OpenSSL/SSL.py", line 1822, in recv_into
+    self._raise_ssl_error(self._ssl, result)
+  File "/usr/lib/python3/dist-packages/OpenSSL/SSL.py", line 1639, in _raise_ssl_error
+    raise SysCallError(errno, errorcode.get(errno))
+OpenSSL.SSL.SysCallError: (104, 'ECONNRESET')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 425, in _error_catcher
+    yield
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 752, in read_chunked
+    self._update_chunk_length()
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 682, in _update_chunk_length
+    line = self._fp.fp.readline()
+  File "/usr/lib/python3.8/socket.py", line 669, in readinto
+    return self._sock.recv_into(b)
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 328, in recv_into
+    return self.recv_into(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 318, in recv_into
+    raise SocketError(str(e))
+OSError: (104, 'ECONNRESET')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 750, in generate
+    for chunk in self.raw.stream(chunk_size, decode_content=True):
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 560, in stream
+    for line in self.read_chunked(amt, decode_content=decode_content):
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 781, in read_chunked
+    self._original_response.close()
+  File "/usr/lib/python3.8/contextlib.py", line 131, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/usr/lib/python3/dist-packages/urllib3/response.py", line 443, in _error_catcher
+    raise ProtocolError("Connection broken: %r" % e, e)
+urllib3.exceptions.ProtocolError: ('Connection broken: OSError("(104, \'ECONNRESET\')")', OSError("(104, 'ECONNRESET')"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "main.py", line 1, in <module>
+    import discord_bot, tweet, streaming
+  File "/home/ubuntu/imope-bot/streaming.py", line 40, in <module>
+    stream.statuses.filter(track='@imope_bot')
+  File "/usr/local/lib/python3.8/dist-packages/twython/streaming/types.py", line 47, in filter
+    self.streamer._request(url, 'POST', params=params)
+  File "/usr/local/lib/python3.8/dist-packages/twython/streaming/api.py", line 139, in _request
+    for line in response.iter_lines(self.chunk_size):
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 794, in iter_lines
+    for chunk in self.iter_content(chunk_size=chunk_size, decode_unicode=decode_unicode):
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 753, in generate
+    raise ChunkedEncodingError(e)
+requests.exceptions.ChunkedEncodingError: ('Connection broken: OSError("(104, \'ECONNRESET\')")', OSError("(104, 'ECONNRESET')"))
