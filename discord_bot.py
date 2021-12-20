@@ -44,6 +44,16 @@ def get_ranking():
 
 notice_channel = 921758153341812736
 member_connected_time = {}
+voice_enable_time = {}
+
+def user_voice_state_check(member,before,after):
+        time_now = time.time()
+        id = str(member.id)
+        if not before.self_mute and after.self_mute:
+                if not member_connected_time[id] == 0:
+                        voice_enable_time[id] += time_now - member_connected_time[id]
+        elif before.self_mute and not after.self_mute:
+                member_connected_time[id] = time_now
 
 @client.event
 async def on_ready():
@@ -75,6 +85,8 @@ async def voice_member_tweet():
 async def on_voice_state_update(member, before, after):
         if not before.channel:
                 voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
+                voice_enable_time[str(member.id)] = 0
+                member_connected_time[str(member.id)] = 0
         else:
                 voice_channel_member[voice_channel_index[before.channel.id]].remove(member.id)
                 if after.channel:
@@ -91,7 +103,7 @@ async def on_voice_state_update(member, before, after):
         member_id = str(member.id)
         json = load_json()
         if(after.channel):
-                if(not before.channel):
+                if(not before.channel and not after.self_mute):
                     member_connected_time[member_id] = time.time()
 
                 today = datetime.datetime.now().day
@@ -125,7 +137,9 @@ async def on_voice_state_update(member, before, after):
                 print(f"{member.name}さんが接続しました")
         else:
                 time_now = time.time()
-                connected_time = time_now - member_connected_time[member_id]
+                if not after.self_mute:
+                        voice_enable_time[member_id] += time_now - member_connected_time[member_id]
+                connected_time = voice_enable_time[member_id]
 
                 try:
                         json[member_id]["point"] += int(connected_time / 60)
