@@ -102,6 +102,7 @@ async def on_voice_state_update(member, before, after):
 
         member_id = str(member.id)
         json = load_json()
+        user_voice_state_check(member,before,after)
         if(after.channel):
                 if(not before.channel and not after.self_mute):
                     member_connected_time[member_id] = time.time()
@@ -151,22 +152,26 @@ async def on_voice_state_update(member, before, after):
                 if      60 <= connected_time:
                         await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", datetime.datetime.now()))
 
-        #ranking = get_ranking()
-        #medals = ["🥇", "🥈", "🥉"]
-        #i = 0
-        #for v in ranking:
-            #member = await client.guilds[0].fetch_member(int(v[1]))
-            #nick = member.display_name
-            #if(nick[0] == medals[0] or nick[0] == medals[1] or nick[0] == medals[2]):
-                #nick = nick[1:]
-            #if(i < 3):
-                #nick = medals[i] + nick
-            #try:
-                #await member.edit(nick=nick)
-            #except:
-                #print("Administrator.")
+        ranking = 0
+        top3 = get_ranking()[:3]
+        for v in top3:
+                if(int(v[1]) == after.id):
+                        break
+                ranking += 1
 
-            #i += 1
+        medals = ["🥇", "🥈", "🥉"]
+        nick = after.display_name
+
+        nick = demoji.replace(string=nick, repl="")
+        if(ranking < 3):
+                nick = medals[ranking] + nick
+
+        member = await client.guilds[0].fetch_member(int(after.id))
+        try:
+                await member.edit(nick=nick)
+        except:
+                print("Administrator")
+
 
 
 
