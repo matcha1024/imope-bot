@@ -45,6 +45,10 @@ def get_ranking():
 notice_channel = 921758153341812736
 member_connected_time = {}
 voice_enable_time = {}
+duel_flg = False
+duel_pre = False
+duel_id = []
+duel_res = dict()
 
 def user_voice_state_check(member,before,after):
         time_now = time.time()
@@ -230,10 +234,66 @@ async def points(ctx):
         )
         await ctx.send(embed = embed)
 
+@client.command()
+async def duel(ctx):
+        global duel_flg,duel_id
+        print("test")
+        if duel_flg:
+                return
+        duel_flg = True
+        duel_id = []
+        duel_id.append(ctx.author.id)
+        await ctx.send(embed = discord.Embed(description = "決闘を始めます。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
+
+# クソザコ実装ごめんという気持ちでいっぱい
+# 時間あるときに直します。。。
 @client.event
 async def on_message(message):
+        global duel_flg,duel_id,duel_pre,duel_res
         if(message.author.bot):
                 return
+        if duel_flg:
+                if duel_pre:
+                        if message.content == "サイコロ" and message.author.id in duel_id:
+                                if  message.author.id not in duel_res:
+                                        res = random.randint(1,6)
+                                        duel_res[message.author.id] = res
+                                        await message.channel.send(embed = discord.Embed(description = f"{message.author.display_name}は{res}を出しました。"))
+                                        print(duel_res)
+                                if len(duel_res) == 2:
+                                        point = []
+                                        if duel_res[duel_id[0]] == duel_res[duel_id[1]]:
+                                                await message.channel.send(embed = discord.Embed(description = "引き分けのためやり直しです。"))
+                                                duel_res = dict()
+                                        elif duel_res[duel_id[0]] > duel_res[duel_id[1]]:
+                                                await message.channel.send(embed = discord.Embed(description = f"{duel_id[2]}の勝利!"))
+                                                point = [10,-10]
+                                        else:
+                                                await message.channel.send(embed = discord.Embed(description = f"{duel_id[3]}の勝利!"))
+                                                point = [-10,10]
+                                        await client.get_channel(notice_channel).send(embed = notice_point(point[0],duel_id[2],"決闘", datetime.datetime.now()))
+                                        await client.get_channel(notice_channel).send(embed = notice_point(point[1],duel_id[3],"決闘", datetime.datetime.now()))
+                                        json = load_json()
+                                        json[str(duel_id[0])]["point"] += point[0]
+                                        json[str(duel_id[1])]["point"] += point[1]
+                                        write_json(json)
+                                        duel_flg = False
+                                        duel_pre = False
+                                        duel_id = []
+                                        duel_res = dict()
+
+                                                
+                elif message.content == '参加' and message.author.id != duel_id[0]:
+                        duel_id.append(message.author.id)
+                        member1 = await client.guilds[0].fetch_member(int(duel_id[0]))
+                        member2 = await client.guilds[0].fetch_member(int(duel_id[1]))
+                        duel_id.append(member1.display_name)
+                        duel_id.append(member2.display_name)
+                        await message.channel.send(f"{duel_id[2]} vs {duel_id[3]}\nサイコロ　とメッセージを送るとサイコロを振れます。振り直しはできません。")
+                        duel_pre = True
+                else:
+                        duel_flg = False
+                        await message.channel.send(embed = discord.Embed(description = '決闘がキャンセルされました。'))
         await client.process_commands(message)
 
 @client.event
