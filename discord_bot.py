@@ -43,6 +43,7 @@ def get_ranking():
         return ranking
 
 notice_channel = 921758153341812736
+logs_channel = 923552788041060402
 member_connected_time = {}
 voice_enable_time = {}
 duel_flg = False
@@ -91,10 +92,20 @@ async def on_voice_state_update(member, before, after):
                 voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
                 voice_enable_time[str(member.id)] = 0
                 member_connected_time[str(member.id)] = 0
+                is_mute = "ミュート" if after.self_mute else ""
+                await client.get_channel(logs_channel).send(f"{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')} {member.display_name}がボイチャ接続 {is_mute}")
+        elif before.channel and after.channel:
+                if before.self_mute and not after.self_mute:
+                        await client.get_channel(logs_channel).send(f"{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')} {member.display_name}がミュート解除")
+                elif not before.self_mute and after.self_mute:
+                        await client.get_channel(logs_channel).send(f"{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')} {member.display_name}がミュート設定")
         else:
                 voice_channel_member[voice_channel_index[before.channel.id]].remove(member.id)
                 if after.channel:
                         voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
+                if not after.channel:
+                        is_mute = "ミュート" if after.self_mute else ""
+                        await client.get_channel(logs_channel).send(f"{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')} {member.display_name}がボイチャ切断 {is_mute}") 
         allsum = sum(len(v) for v in voice_channel_member)
 
         if 0 < allsum and not voice_member_tweet.is_running():
@@ -156,25 +167,18 @@ async def on_voice_state_update(member, before, after):
                 if      60 <= connected_time:
                         await client.get_channel(notice_channel).send(embed = notice_point(int(connected_time / 60),member.name,"通話", datetime.datetime.now()))
 
-        ranking = 0
-        top3 = get_ranking()[:3]
-        for v in top3:
-                if(int(v[1]) == after.id):
-                        break
-                ranking += 1
-
+        ranking = get_ranking()
         medals = ["🥇", "🥈", "🥉"]
-        nick = after.display_name
-
-        nick = demoji.replace(string=nick, repl="")
-        if(ranking < 3):
-                nick = medals[ranking] + nick
-
-        member = await client.guilds[0].fetch_member(int(after.id))
-        try:
-                await member.edit(nick=nick)
-        except:
-                print("Administrator")
+        for v in ranking:
+                member = await client.guilds[0].fetch_member(int(v[1]))
+                nick = demoji.replace(string=member.display_name, repl="")
+                if medals:
+                        nick = medals[0] + nick
+                        medals = medals[1:]
+                try:
+                        await member.edit(nick=nick)
+                except:
+                        print("Administrator")
 
 
 
@@ -281,6 +285,18 @@ async def on_message(message):
                                         duel_pre = False
                                         duel_id = []
                                         duel_res = dict()
+                                        ranking = get_ranking()
+                                        medals = ["🥇", "🥈", "🥉"]
+                                        for v in ranking:
+                                                member = await client.guilds[0].fetch_member(int(v[1]))
+                                                nick = demoji.replace(string=member.display_name, repl="")
+                                                if medals:
+                                                        nick = medals[0] + nick
+                                                        medals = medals.pop(0)
+                                                try:
+                                                        await member.edit(nick=nick)
+                                                except:
+                                                        print("Administrator")
 
                                                 
                 elif message.content == '参加' and message.author.id != duel_id[0]:
