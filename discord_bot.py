@@ -50,9 +50,12 @@ duel_flg = False
 duel_pre = False
 duel_id = []
 duel_res = dict()
-
 def user_voice_state_check(member,before,after):
         time_now = time.time()
+        for role in member.roles:
+                if role.id == 923923777375592468:
+                        print("免除")
+                        return
         id = str(member.id)
         if not before.self_mute and after.self_mute:
                 if not member_connected_time[id] == 0:
