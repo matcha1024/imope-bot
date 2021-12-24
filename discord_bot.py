@@ -52,12 +52,11 @@ duel_id = []
 duel_res = dict()
 def user_voice_state_check(member,before,after):
         time_now = time.time()
-        for role in member.roles:
-                if role.id == 923923777375592468:
-                        print("免除")
-                        return
         id = str(member.id)
         if not before.self_mute and after.self_mute:
+                if 923923777375592468 in [role.id for role in member.roles]:
+                        print("免除")
+                        return
                 if not member_connected_time[id] == 0:
                         voice_enable_time[id] += time_now - member_connected_time[id]
         elif before.self_mute and not after.self_mute:
@@ -122,8 +121,12 @@ async def on_voice_state_update(member, before, after):
         json = load_json()
         user_voice_state_check(member,before,after)
         if(after.channel):
-                if(not before.channel and not after.self_mute):
-                    member_connected_time[member_id] = time.time()
+                if(not before.channel):
+                        if not after.self_mute:
+                                member_connected_time[member_id] = time.time()
+                        elif 923923777375592468 in [role.id for role in member.roles]:
+                                print("免除")
+                                member_connected_time[member_id] = time.time()
 
                 today = datetime.datetime.now().day
                 if not member_id in json:
@@ -157,6 +160,9 @@ async def on_voice_state_update(member, before, after):
         else:
                 time_now = time.time()
                 if not after.self_mute:
+                        voice_enable_time[member_id] += time_now - member_connected_time[member_id]
+                elif 923923777375592468 in [role.id for role in member.roles]:
+                        print("免除")
                         voice_enable_time[member_id] += time_now - member_connected_time[member_id]
                 connected_time = voice_enable_time[member_id]
 
@@ -319,7 +325,7 @@ async def on_message(message):
                         member2 = await client.guilds[0].fetch_member(int(duel_id[1]))
                         duel_id.append(member1.display_name)
                         duel_id.append(member2.display_name)
-                        await message.channel.send(embed = discord.Embed(description =f"{duel_id[2]} vs {duel_id[3]}\nサイコロ　とメッセージを送るとサイコロを振れます。振り直しはできません。"))
+                        await message.channel.send(embed = discord.Embed(description =f"{duel_id[2]} vs {duel_id[3]}\nサイコロ とメッセージを送るとサイコロを振れます。振り直しはできません。"))
                         duel_pre = True
                 else:
                         duel_flg = False
