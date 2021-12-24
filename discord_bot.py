@@ -249,6 +249,17 @@ async def duel(ctx):
         duel_id.append(ctx.author.id)
         await ctx.send(embed = discord.Embed(description = "決闘を始めます。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
 
+@client.command()
+async def rduel(ctx):
+        global duel_flg,duel_id,duel_pre,duel_res
+        if  not str(ctx.author.id) in ['833198910251728896','491265560135598081','704130953307750452']:
+                return
+        duel_flg = False
+        duel_pre = False
+        duel_id = []
+        duel_res = dict()
+        await ctx.send(embed = discord.Embed(description = "決闘がキャンセルされました。"))
+
 # クソザコ実装ごめんという気持ちでいっぱい
 # 時間あるときに直します。。。
 @client.event
@@ -305,7 +316,7 @@ async def on_message(message):
                         member2 = await client.guilds[0].fetch_member(int(duel_id[1]))
                         duel_id.append(member1.display_name)
                         duel_id.append(member2.display_name)
-                        await message.channel.send(f"{duel_id[2]} vs {duel_id[3]}\nサイコロ　とメッセージを送るとサイコロを振れます。振り直しはできません。")
+                        await message.channel.send(embed = discord.Embed(description =f"{duel_id[2]} vs {duel_id[3]}\nサイコロ　とメッセージを送るとサイコロを振れます。振り直しはできません。"))
                         duel_pre = True
                 else:
                         duel_flg = False
