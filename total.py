@@ -61,12 +61,13 @@ async def on_ready():
 	description += "ポイントがリセットされました。 \n"
 	for v in total():
 		member = await client.guilds[0].fetch_member(int(v[1]))
+		member_roles = [user_role.id for user_role in member.roles]
 		name = member.display_name
 		description += f"{rank}位: {name} さん ({v[0]}ポイント) \n"
 		if len(description) <= 130:
 			twitter_message = description
 		for role in role_id:
-			if role in [user_role.id for user_role in member.roles]:
+			if role in member_roles:
 				await member.remove_roles(member.guild.get_role(role))
 		if rank <= 3:
 			print(role_id[rank-1])
