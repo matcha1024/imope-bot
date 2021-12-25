@@ -3,7 +3,8 @@ import discord,json
 from tweet import doTweet
 
 client = discord.Client()
-notice_channel = 917413934162649088
+notice_channel = 921758153341812736
+role_id = [922115979788574851,922116968767696926,922117055753375765]
 
 def get_end_month(dt):
     return calendar.monthrange(dt.year,dt.month)
@@ -54,6 +55,7 @@ async def on_ready():
 	date_now = datetime.datetime.now()
 	date_first,date_end = get_aggregation_period(date_now)
 	description = f"期間: {date_first} ~ {date_end} \n"
+	twitter_message = description
 
 	rank = 1
 	description += "ポイントがリセットされました。 \n"
@@ -61,14 +63,21 @@ async def on_ready():
 		member = await client.guilds[0].fetch_member(int(v[1]))
 		name = member.display_name
 		description += f"{rank}位: {name} さん ({v[0]}ポイント) \n"
+		if len(description) <= 130:
+			twitter_message = description
+		for role in role_id:
+			if role in [user_role.id for user_role in member.roles]:
+				await member.remove_roles(member.guild.get_role(role))
+		if rank <= 3:
+			print(role_id[rank-1])
+			await member.add_roles(member.guild.get_role(role_id[rank-1]))
 		rank += 1
-
 	embed = discord.Embed(
 		title = "ポイント集計",
 		description = description
 	)
 # 同じ内容のツイートをすると怒られてしまうので、テストの際などは下の2行をコメントアウトして行うこと
-	doTweet(description)
+	doTweet(twitter_message + "#いもぺ順位")
 	doTweet(get_next_aggregation_period(dt))
 	await client.get_channel(notice_channel).send(embed = embed)
 	await client.close()
@@ -78,9 +87,8 @@ if not int(dt.day) in [1,int(get_end_month(dt)[1]/2)+1]:
     exit()
 date_first,date_end = get_aggregation_period(dt)
 print(date_first,date_end)
-def main():
-    TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
-    TOKEN = TOKEN_file.read()
-    TOKEN_file.close()
+TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
+TOKEN = TOKEN_file.read()
+TOKEN_file.close()
 
-    client.run(TOKEN)
+client.run(TOKEN)
