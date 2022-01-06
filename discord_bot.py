@@ -236,10 +236,9 @@ async def point(ctx):
 @client.command()
 async def points(ctx):
         out = ""
-        json = load_json()
-        for user_id in json:
+        for point,user_id in get_ranking():
                 member = await client.guilds[0].fetch_member(int(user_id))
-                out += f"{member.display_name}さん: {json[user_id]['point']}\n"
+                out += f"{member.display_name}さん: {point}\n"
 
         embed = discord.Embed(
                 title = "ポイント一覧表",
