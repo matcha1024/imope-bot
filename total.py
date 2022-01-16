@@ -84,8 +84,12 @@ async def on_ready():
 	await client.close()
 
 dt = datetime.datetime.now()
+cronlog = open("/home/ubuntu/imope-bot/logs/total.py", "a")
 if not int(dt.day) in [1,int(get_end_month(dt)[1]/2)+1]:
-    exit()
+	cronlog.write(str(dt) + ": Not the aggregation date\n")
+	exit()
+cronlog.write(str(dt) + ": Today is the aggregation day\n")
+cronlog.close()
 date_first,date_end = get_aggregation_period(dt)
 print(date_first,date_end)
 TOKEN_file = open(".TOKEN", "r", encoding="utf-8")
