@@ -138,7 +138,10 @@ async def on_voice_state_update(member, before, after):
                         last = -1
                 if(not last == today):
                         try:
-                                json[member_id]["login"]["logbo"] += 1
+                                if today - 1 == last or 27 < last:
+                                        json[member_id]["login"]["logbo"] += 1
+                                else:
+                                        json[member_id]["login"]["logbo"] = 1
                         except:
                                 json[member_id]["login"] = {}
                                 json[member_id]["login"]["logbo"] = 1
