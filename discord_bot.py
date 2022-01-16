@@ -268,6 +268,27 @@ async def rduel(ctx):
         duel_res = dict()
         await ctx.send(embed = discord.Embed(description = "決闘がキャンセルされました。"))
 
+@client.command()
+async def status(ctx):
+        name = ctx.author.nick if ctx.author.nick else ctx.author.name
+        points = load_json()
+        point = points[str(ctx.author.id)]["point"]
+        login = points[str(ctx.author.id)]["login"]["logbo"]
+        try:
+                embed = discord.Embed(
+                        title = f"{name}さんの現在のステータス",
+                        description = f"獲得ポイント　　：{point}ポイント\n連続ログイン日数：{login}日"
+                )
+
+                await ctx.send(embed = embed)
+        except:
+                embed = discord.Embed(
+                        title = f"Error.",
+                        description = f"{name}さんのステータスを参照できません。"
+                )
+
+                await ctx.send(embed = embed)
+
 # クソザコ実装ごめんという気持ちでいっぱい
 # 時間あるときに直します。。。
 @client.event
