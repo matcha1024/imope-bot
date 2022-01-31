@@ -65,6 +65,7 @@ def user_voice_state_check(member,before,after):
 @client.event
 async def on_ready():
         print("Logged in.")
+        await client.change_presence(activity=discord.Game("IMOPEX"))
 
 @tasks.loop(minutes=30)
 async def voice_member_tweet():
