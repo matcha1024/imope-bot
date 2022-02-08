@@ -49,6 +49,7 @@ voice_enable_time = {}
 duel_flg = False
 duel_pre = False
 duel_id = []
+duel_point = 10
 duel_res = dict()
 def user_voice_state_check(member,before,after):
         time_now = time.time()
@@ -91,6 +92,9 @@ async def voice_member_tweet():
 
 @client.event
 async def on_voice_state_update(member, before, after):
+        if member.bot:
+                print("botは免除")
+                return
         if not before.channel:
                 voice_channel_member[voice_channel_index[after.channel.id]].append(member.id)
                 voice_enable_time[str(member.id)] = 0
@@ -149,7 +153,7 @@ async def on_voice_state_update(member, before, after):
                         json[member_id]["login"]["last"] = today
 
                         lowest = json[member_id]["login"]["logbo"]
-                        logbo = random.choice(range(lowest, lowest + 10))
+                        logbo = random.choice(range(1, lowest + 10))
 
                         write_json(json)
 
@@ -251,15 +255,18 @@ async def points(ctx):
         await ctx.send(embed = embed)
 
 @client.command()
-async def duel(ctx):
-        global duel_flg,duel_id
-        print("test")
+async def duel(ctx,args = 10):
+        global duel_flg,duel_id,duel_point
         if duel_flg:
                 return
+        if 100 < args or args <= 0:
+                await ctx.send(embed = discord.Embed(description = "ポイントの値が不正です。\n1～100の間で指定してください"))
+                return
+        duel_point = args
         duel_flg = True
         duel_id = []
         duel_id.append(ctx.author.id)
-        await ctx.send(embed = discord.Embed(description = "決闘を始めます。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
+        await ctx.send(embed = discord.Embed(description = f"決闘を始めます。参加費は{args}ポイントです。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
 
 @client.command()
 async def rduel(ctx):
@@ -297,7 +304,7 @@ async def status(ctx):
 # 時間あるときに直します。。。
 @client.event
 async def on_message(message):
-        global duel_flg,duel_id,duel_pre,duel_res
+        global duel_flg,duel_id,duel_pre,duel_res,duel_point
         if(message.author.bot):
                 return
         if duel_flg:
@@ -315,10 +322,10 @@ async def on_message(message):
                                                 duel_res = dict()
                                         elif duel_res[duel_id[0]] > duel_res[duel_id[1]]:
                                                 await message.channel.send(embed = discord.Embed(description = f"{duel_id[2]}の勝利!"))
-                                                point = [10,-10]
+                                                point = [duel_point,duel_point * -1]
                                         else:
                                                 await message.channel.send(embed = discord.Embed(description = f"{duel_id[3]}の勝利!"))
-                                                point = [-10,10]
+                                                point = [duel_point * -1,duel_point]
                                         await client.get_channel(notice_channel).send(embed = notice_point(point[0],duel_id[2],"決闘", datetime.datetime.now()))
                                         await client.get_channel(notice_channel).send(embed = notice_point(point[1],duel_id[3],"決闘", datetime.datetime.now()))
                                         json = load_json()

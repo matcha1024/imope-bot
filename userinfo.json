@@ -1,1 +1,138 @@
-{"704130953307750452": {"nick": null, "login": {"logbo": 4, "last": 19}, "point": 20}, "491265560135598081": {"nick": "\ud83e\udd47\ud83d\ude09\ud83e\udd48\ud83e\udd47123\u3044\u3082", "login": {"logbo": 4, "last": 20}, "point": 1025}, "833198910251728896": {"nick": "\ud83e\udd48unchi", "login": {"logbo": 1, "last": 18}, "point": 4}, "415885940704411648": {"nick": "\u30ea\u30d4\u30fc\u30bf\u30fc\u6b66\u7530", "login": {"logbo": 3, "last": 20}, "point": 1188}, "569028134540935170": {"nick": "\u30e9\u30f3\u30d1\u30fc\u30c8\u6b66\u7530", "login": {"logbo": 2, "last": 19}, "point": 401}, "504152200512274452": {"nick": "\u30b9\u30ca\u30a4\u30d1\u30fc\u6b66\u7530\u6b66\u7530", "login": {"logbo": 1, "last": 19}, "point": 280}, "354264260118970368": {"nick": "\u30bb\u30f3\u30c1\u30cd\u30eb\u6b66\u7530", "login": {"logbo": 2, "last": 20}, "point": 502}}
+{
+    "704130953307750452": {
+        "nick": null,
+        "login": {
+            "logbo": 1,
+            "last": 30
+        },
+        "point": 0
+    },
+    "491265560135598081": {
+        "nick": "\ud83e\udd47\ud83d\ude09\ud83e\udd48\ud83e\udd47123\u3044\u3082",
+        "login": {
+            "logbo": 53,
+            "last": 8
+        },
+        "point": 1208
+    },
+    "833198910251728896": {
+        "nick": "\ud83e\udd48unchi",
+        "login": {
+            "logbo": 1,
+            "last": 1
+        },
+        "point": 5
+    },
+    "415885940704411648": {
+        "nick": "\u30ea\u30d4\u30fc\u30bf\u30fc\u6b66\u7530",
+        "login": {
+            "logbo": 2,
+            "last": 7
+        },
+        "point": 308
+    },
+    "569028134540935170": {
+        "nick": "\u30e9\u30f3\u30d1\u30fc\u30c8\u6b66\u7530",
+        "login": {
+            "logbo": 2,
+            "last": 19
+        },
+        "point": 0
+    },
+    "504152200512274452": {
+        "nick": "\u30b9\u30ca\u30a4\u30d1\u30fc\u6b66\u7530\u6b66\u7530",
+        "login": {
+            "logbo": 10,
+            "last": 8
+        },
+        "point": 1986
+    },
+    "354264260118970368": {
+        "nick": "\u30bb\u30f3\u30c1\u30cd\u30eb\u6b66\u7530",
+        "login": {
+            "logbo": 11,
+            "last": 8
+        },
+        "point": 1742
+    },
+    "600611680711606284": {
+        "nick": "!shr s",
+        "login": {
+            "logbo": 2,
+            "last": 7
+        },
+        "point": 109
+    },
+    "431770644464664577": {
+        "nick": "\u304b\u306b\u3075\u3089\u3044\u6b66\u7530",
+        "login": {
+            "logbo": 9,
+            "last": 8
+        },
+        "point": 2004
+    },
+    "716156166782320690": {
+        "nick": "\u30c6\u30c4\u30e4\u30fb\u6b66\u7530",
+        "login": {
+            "logbo": 1,
+            "last": 29
+        },
+        "point": 0
+    },
+    "518899666637553667": {
+        "nick": "\u30af\u30ec\u30fc\u30d0\u30fc\u6b66\u7530",
+        "login": {
+            "logbo": 2,
+            "last": 6
+        },
+        "point": 0
+    },
+    "793906947279028245": {
+        "nick": "\u30db\u30fc\u30af\u30a2\u30a4\u30fb\u6b66\u7530\u30fb\u30a8\u30af\u30bb\u30ec\u30f3\u30c8",
+        "login": {
+            "logbo": 1,
+            "last": 30
+        },
+        "point": 0
+    },
+    "533698325203910668": {
+        "nick": "!sh s",
+        "login": {
+            "logbo": 2,
+            "last": 8
+        },
+        "point": 6
+    },
+    "600611976024162304": {
+        "nick": "!shg s",
+        "login": {
+            "logbo": 1,
+            "last": 7
+        },
+        "point": 0
+    },
+    "805127769037471744": {
+        "nick": null,
+        "login": {
+            "logbo": 1,
+            "last": 8
+        },
+        "point": 0
+    },
+    "713045110115270768": {
+        "nick": "\u30a6\u30a3\u30f3\u30b0\u30de\u30f3\u6b66\u7530",
+        "login": {
+            "logbo": 1,
+            "last": 5
+        },
+        "point": 45
+    },
+    "761225552064675850": {
+        "nick": null,
+        "login": {
+            "logbo": 1,
+            "last": 5
+        },
+        "point": 254
+    }
+}
