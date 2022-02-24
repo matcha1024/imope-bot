@@ -269,6 +269,66 @@ async def duel(ctx,args = 10):
         await ctx.send(embed = discord.Embed(description = f"決闘を始めます。参加費は{args}ポイントです。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
 
 @client.command()
+async def autoduel(ctx,command):
+        userjson = load_json()
+        duel_point = 100
+        if len(command) != 22:
+                ltitle = "Error"
+                ldescription = "不正なコマンドです。マニュアルを確認してください。"
+                if command == 'on':
+                        userjson[str(ctx.author.id)]['autoduel'] = 'on'
+                        ltitle = "設定完了"
+                        ldescription = "自動決闘機能をオンにしました。"
+                elif command == "off":
+                        userjson[str(ctx.author.id)]['autoduel'] = 'off'
+                        ltitle = "設定完了"
+                        ldescription = "自動決闘機能をオフにしました。"
+                embed = discord.Embed(
+                title = ltitle,
+                description = ldescription
+                )
+                await ctx.send(embed = embed)
+                write_json(userjson)
+        else:
+                userid = command[3:21]
+                member = await client.guilds[0].fetch_member(int(userid))
+                if "autoduel" in userjson[userid]:
+                        if userjson[userid]["autoduel"] == 'on':
+                                res = random.sample(list(range(1,6)),2)
+                                print(res)
+                                embed = discord.Embed(
+                                        title = f"サイコロの結果.",
+                                        description = f"{ctx.author.name}さんの出した目:{res[0]}\n{member.display_name}さんの出した目：{res[1]}"
+                                )
+                                await ctx.send(embed = embed)
+                                if res[0] < res[1]:
+                                        await ctx.send(embed = discord.Embed(description = f"{member.display_name}の勝利!"))
+                                        point = [duel_point * -1,duel_point]
+                                else:
+                                        await ctx.send(embed = discord.Embed(description = f"{ctx.author.name}の勝利!"))
+                                        point = [duel_point,duel_point * -1]
+                                await client.get_channel(notice_channel).send(embed = notice_point(point[0],ctx.author.name,"決闘", datetime.datetime.now()))
+                                await client.get_channel(notice_channel).send(embed = notice_point(point[1],member.display_name,"決闘", datetime.datetime.now()))
+                                userjson[str(ctx.author.id)]["point"] += point[0]
+                                userjson[userid]["point"] += point[1]
+                                write_json(userjson)
+                        else:
+                                print("対戦相手の自動決闘設定がオフになっています。")
+                                embed = discord.Embed(
+                                        title = f"自動決闘機能オフ.",
+                                        description = f"{member.display_name}さんは自動決闘設定がオフになっています。"
+                                )
+                                await ctx.send(embed = embed)
+                        
+                else:
+                        print("no")
+                        embed = discord.Embed(
+                                title = f"自動決闘機能未設定",
+                                description = f"{member.display_name}さんは、自動決闘機能が未設定です。"
+                        )
+                        await ctx.send(embed = embed)
+
+@client.command()
 async def rduel(ctx):
         global duel_flg,duel_id,duel_pre,duel_res
         if  not str(ctx.author.id) in ['833198910251728896','491265560135598081','704130953307750452']:
