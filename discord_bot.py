@@ -272,7 +272,7 @@ async def duel(ctx,args = 10):
 async def autoduel(ctx,command):
         userjson = load_json()
         duel_point = 100
-        if len(command) != 22:
+        if not(command[0:2] == '<@' and command[-1] == '>'):
                 ltitle = "Error"
                 ldescription = "不正なコマンドです。マニュアルを確認してください。"
                 if command == 'on':
@@ -290,7 +290,14 @@ async def autoduel(ctx,command):
                 await ctx.send(embed = embed)
                 write_json(userjson)
         else:
-                userid = command[3:21]
+                if not len(command) in [21,22]:
+                        embed = discord.Embed(
+                                title = "Error",
+                                description = "不正なコマンドです。マニュアルを確認してください。"
+                        )
+                        await ctx.send(embed = embed)
+                        return
+                userid = command[3:21] if len(command) == 22 else command[2:20]
                 member = await client.guilds[0].fetch_member(int(userid))
                 if "autoduel" in userjson[userid]:
                         if userjson[userid]["autoduel"] == 'on':
