@@ -358,7 +358,7 @@ async def autoduel(ctx,command):
 
 @client.command()
 async def rd(ctx):
-        await rd(ctx)
+        await rduel(ctx)
 
 @client.command()
 async def rduel(ctx):
