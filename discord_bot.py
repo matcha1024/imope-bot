@@ -198,7 +198,9 @@ async def on_voice_state_update(member, before, after):
                         print("Administrator")
 
 
-
+@client.command()
+async def m(ctx):
+        await man(ctx)
 
 @client.command()
 async def man(ctx):
@@ -222,6 +224,10 @@ async def man(ctx):
     await ctx.send(embed=embed)
 
 @client.command()
+async def p(ctx):
+        await point(ctx)
+
+@client.command()
 async def point(ctx):
         name = ctx.author.nick if ctx.author.nick else ctx.author.name
         points = load_json()
@@ -242,9 +248,16 @@ async def point(ctx):
                 await ctx.send(embed = embed)
 
 @client.command()
-async def points(ctx):
+async def ps(ctx,command = 'none'):
+        await points(ctx,command)
+
+@client.command()
+async def points(ctx,command = 'none'):
         out = ""
+        isShort = False if command == 'full' else True
         for point,user_id in get_ranking():
+                if point == 0 and isShort:
+                        break
                 member = await client.guilds[0].fetch_member(int(user_id))
                 out += f"{member.display_name}さん: {point}\n"
 
@@ -253,6 +266,10 @@ async def points(ctx):
                 description = out
         )
         await ctx.send(embed = embed)
+
+@client.command()
+async def d(ctx,args = 10):
+        await duel(ctx,args)
 
 @client.command()
 async def duel(ctx,args = 10):
@@ -267,6 +284,10 @@ async def duel(ctx,args = 10):
         duel_id = []
         duel_id.append(ctx.author.id)
         await ctx.send(embed = discord.Embed(description = f"決闘を始めます。参加費は{args}ポイントです。\n対戦したい人は「参加」とメッセージを送ってください。\n他のメッセージの場合キャンセルされます。"))
+
+@client.command()
+async def ad(ctx,command):
+        await autoduel(ctx,command)
 
 @client.command()
 async def autoduel(ctx,command):
@@ -336,6 +357,10 @@ async def autoduel(ctx,command):
                         await ctx.send(embed = embed)
 
 @client.command()
+async def rd(ctx):
+        await rd(ctx)
+
+@client.command()
 async def rduel(ctx):
         global duel_flg,duel_id,duel_pre,duel_res
         if  not str(ctx.author.id) in ['833198910251728896','491265560135598081','704130953307750452']:
@@ -345,6 +370,10 @@ async def rduel(ctx):
         duel_id = []
         duel_res = dict()
         await ctx.send(embed = discord.Embed(description = "決闘がキャンセルされました。"))
+
+@client.command()
+async def s(ctx):
+        await status(ctx)
 
 @client.command()
 async def status(ctx):
